@@ -2,7 +2,7 @@
 #include <cstdio>
 #include <iostream>
 #define CATCH_CONFIG_MAIN
-#include "common.h"
+#include "uqueue.h"
 #include <atomic>
 #include <catch2/benchmark/catch_benchmark.hpp>
 #include <catch2/catch_test_macros.hpp>
@@ -11,22 +11,23 @@
 TEST_CASE("UQueue Correctness Test", "[correctness]")
 {
   const std::size_t bufferSize = 1024;
-  Common::Queue::UQueue<int> q(bufferSize);
+  Queue::UQueue<int> q(bufferSize);
 
-  REQUIRE(Common::Queue::empty(q));
-  REQUIRE(Common::Queue::enqueue(q, 42));
-  REQUIRE_FALSE(Common::Queue::empty(q));
+  REQUIRE(Queue::empty(q));
+  REQUIRE(Queue::enqueue(q, 42));
+  REQUIRE_FALSE(Queue::empty(q));
 
   int value;
-  REQUIRE(Common::Queue::dequeue(q, value));
+  REQUIRE(Queue::dequeue(q, value));
   REQUIRE(value == 42);
-  REQUIRE(Common::Queue::empty(q));
+  REQUIRE(Queue::empty(q));
 }
 
 TEST_CASE("UQueue Benchmark - 100 Million Operations", "[benchmark]")
 {
   const std::size_t bufferSize = 100 * 1024 * 1024 / sizeof(int);
-  Common::Queue::UQueue<int> q(bufferSize);
+
+  Queue::UQueue<int> q(bufferSize);
 
   std::atomic<std::size_t> pushCount{0};
   std::atomic<std::size_t> popCount{0};
@@ -39,7 +40,7 @@ TEST_CASE("UQueue Benchmark - 100 Million Operations", "[benchmark]")
   {
     while (pushCount < totalOperations)
     {
-      if (Common::Queue::enqueue(q, pushValue))
+      if (Queue::enqueue(q, pushValue))
       {
         ++pushCount;
       }
@@ -52,7 +53,7 @@ TEST_CASE("UQueue Benchmark - 100 Million Operations", "[benchmark]")
     int popValue;
     while (!done || popCount < pushCount)
     {
-      if (Common::Queue::dequeue(q, popValue))
+      if (Queue::dequeue(q, popValue))
       {
         ++popCount;
       }

@@ -3,7 +3,6 @@ include(AddCatch2)
 
 # Create a library from the common sources
 add_library(common STATIC
-    uqueue.cpp
     cmath.cpp
 )
 
@@ -14,8 +13,11 @@ target_include_directories(common PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 add_executable(uqueue_test uqueue_test.cpp)
 target_link_libraries(uqueue_test common Catch2::Catch2WithMain)
 
+add_executable(ulfqueue_test ulfqueue_test.cpp)
+target_link_libraries(ulfqueue_test common Catch2::Catch2WithMain)
 
 # Enable testing and register the tests with CTest
 include(CTest)
 include(Catch)
 catch_discover_tests(uqueue_test)
+catch_discover_tests(ulfqueue_test)
